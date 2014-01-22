@@ -8,7 +8,7 @@ if ($_POST["userId"]) {
 
 	$hash = md5($publicId . $ip . $timestamp . $magic);
 
-	$url = "http://localhost:3000/api/token";
+	$url = "http://api.edmdesigner.com/api/token";
 
 	$data = array(
 				"id"	=> $publicId,
@@ -43,6 +43,8 @@ if ($_POST["userId"]) {
 				function updateProjectList() {
 					$("#NewProject").hide();
 					$("#OpenedProject").hide();
+					$("#Preview").hide();
+					$("#EditProjectInfo").hide();
 					$("#ProjectList").show();
 
 					var projectListContainer = $("#ProjectListContent")
@@ -87,6 +89,45 @@ if ($_POST["userId"]) {
 						})
 						.appendTo(elem);
 
+					var previewButton = $("<button/>")
+						.text("Preview")
+						.click(function() {
+							openPreview(data._id);
+							edmPlugin.previewProject(data._id, openPreview);
+						})
+						.appendTo(elem);
+
+					var EditProjectInfoButton = $("<button>")
+						.text("Edit Project Info")
+						.click(function() {
+							$("#ProjectList").hide();
+							var projInfo = $("#EditProjectInfo");
+							projInfo.show();
+
+							var titleInput = $("#ProjectTitleInput");
+							var descrInput = $("#ProjectDescriptionTextarea");
+							titleInput.val(data.title);
+							descrInput.val(data.description);
+
+							$("#ProjectInfoOk").click(function() {
+								var title = titleInput.val();
+								var descr = descrInput.val();
+
+								titleInput.val("");
+								descrInput.val("");
+
+								projInfo.hide();
+								edmPlugin.updateProjectInfo(data._id, {title: title, description: descr}, function(result) {
+									updateProjectList();
+								});
+							});
+
+							$("#ProjectInfoCancel").click(function() {
+								updateProjectList();
+							});
+						})
+						.appendTo(elem);
+
 					return elem;
 				}
 
@@ -105,6 +146,44 @@ if ($_POST["userId"]) {
 						.append(closeDiv)
 						.append(iframe)
 						.show();
+				}
+
+				function openPreview(result) {
+					var projectListContainer = $("#ProjectList")
+						.hide();
+
+					$("#Preview").show();
+
+					$("#PreviewCloseButton").click(updateProjectList);
+
+					var previewIframe = $("#PreviewIframe");
+					previewIframe.attr("src", result.src);
+					//var previewIframeContents = previewIframe.contents().find("html");
+					//previewIframeContents.html(htmlResult);
+
+					previewIframe.width(240);
+					previewIframe.height(500);
+
+					$("#W240").click(function() {
+						//previewIframe.width(240);
+						previewIframe.width(240);
+					});
+
+					$("#W320").click(function() {
+						previewIframe.width(320);
+					});
+
+					$("#W480").click(function() {
+						previewIframe.width(480);
+					});
+
+					$("#W800").click(function() {
+						previewIframe.width(800);
+					});
+
+					$("#W1024").click(function() {
+						previewIframe.width(1024);
+					});
 				}
 
 				$("#NewProjectButton").click(function() {
@@ -159,6 +238,34 @@ if ($_POST["userId"]) {
 			<textarea id="NewProjectDescription"></textarea>
 			<div>
 				<button id="NewProjectAddButton">Add</button>
+			</div>
+		</div>
+
+		<div id="Preview">
+			<h2>Preview</h2>
+			<div>
+				<button id="PreviewCloseButton">Close</button>
+			</div>
+			<div>
+				<button id="W240">w: 240px</button>
+				<button id="W320">w: 320px</button>
+				<button id="W480">w: 480px</button>
+				<button id="W800">w: 800px</button>
+				<button id="W1024">w: 1024px</button>
+			</div>
+
+			<iframe id="PreviewIframe"></iframe>
+		</div>
+
+		<div id="EditProjectInfo">
+			<h2>Edit project info</h2>
+			<div>
+				<input id="ProjectTitleInput" />
+			</div>
+			<textarea id="ProjectDescriptionTextarea"></textarea>
+			<div>
+				<button id="ProjectInfoOk">Ok</button>
+				<button id="ProjectInfoCancel">Cancel</button>
 			</div>
 		</div>
 	</body>
