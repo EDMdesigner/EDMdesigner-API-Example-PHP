@@ -37,7 +37,7 @@ if ($_POST["userId"]) {
 	<head>
 		<title>EDMdesigner-API-Example-PHP</title>
 		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-		<script src="//localhost:3000/EDMdesignerAPI.js?route=index.php"></script>
+		<script src="http://api.edmdesigner.com/EDMdesignerAPI.js?route=index.php"></script>
 		<script>
 			initEDMdesignerPlugin("pluginTest", function(edmPlugin) {
 				function updateProjectList() {
