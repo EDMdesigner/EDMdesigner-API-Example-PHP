@@ -37,7 +37,7 @@ if ($_POST["userId"]) {
 	<head>
 		<title>EDMdesigner-API-Example-PHP</title>
 		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-		<script src="//localhost:3000/EDMdesignerAPI.js?route=index.php"></script>
+		<script src="//api.edmdesigner.com/EDMdesignerAPI.js?route=index.php"></script>
 		<script>
 			initEDMdesignerPlugin("pluginTest", function(edmPlugin) {
 				function updateProjectList() {
@@ -108,6 +108,9 @@ if ($_POST["userId"]) {
 							var descrInput = $("#ProjectDescriptionTextarea");
 							titleInput.val(data.title);
 							descrInput.val(data.description);
+
+							$("#ProjectInfoOk").off("click");
+							$("#ProjectInfoCancel").off("click");
 
 							$("#ProjectInfoOk").click(function() {
 								var title = titleInput.val();
