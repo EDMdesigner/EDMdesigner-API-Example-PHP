@@ -1,14 +1,15 @@
-<?php
+<?
+error_reporting(E_ALL);
 if ($_POST["userId"]) {
-	$publicId = "TESTAPIKEY";
-	$magic = "XSDE422RSDJQDJW8QADM31SMA";
+	$publicId = "YOUR-API-KEY";
+	$magic = "your-magic-word";
 
 	$ip = $_SERVER["REMOTE_ADDR"];
 	$timestamp = time();
 
 	$hash = md5($publicId . $ip . $timestamp . $magic);
 
-	$url = "http://api.edmdesigner.com/api/token";
+	$url = "http://api-a.edmdesigner.com/api/token"; //in production, implement fail over mechanism to api-b and api-c.edmdesigner.com
 
 	$data = array(
 				"id"	=> $publicId,
@@ -20,11 +21,11 @@ if ($_POST["userId"]) {
 
 	// use key 'http' even if you send the request to https://...
 	$options = array(
-	    'http' => array(
-	        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-	        'method'  => 'POST',
-	        'content' => http_build_query($data),
-	    ),
+	    "http" => array(
+	        "header"  => "Content-type: application/x-www-form-urlencoded\r\n",
+	        "method"  => 'POST',
+	        "content" => http_build_query($data),
+	    )
 	);
 
 	$context  = stream_context_create($options);
@@ -37,9 +38,9 @@ if ($_POST["userId"]) {
 	<head>
 		<title>EDMdesigner-API-Example-PHP</title>
 		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-		<script src="//api.edmdesigner.com/EDMdesignerAPI.js?route=index.php"></script>
+		<script src="https://api-static.edmdesigner.com/EDMdesignerAPI.js"></script>
 		<script>
-			initEDMdesignerPlugin("pluginTest", function(edmPlugin) {
+			initEDMdesignerPlugin("index.php", "templater", function(edmPlugin) {
 				function updateProjectList() {
 					$("#NewProject").hide();
 					$("#OpenedProject").hide();
